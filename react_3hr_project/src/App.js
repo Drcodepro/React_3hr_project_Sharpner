@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import DetailInput from './Component/DetailInput';
-
 function App() {
   return (
     <>
