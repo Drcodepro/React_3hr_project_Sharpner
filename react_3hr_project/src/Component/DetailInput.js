@@ -18,14 +18,24 @@ function DetailInput(props){
     
     useEffect(() => {
         let initialProductData =[]
-        for(let i =1;i<=localStorage.length;i++){
-            const currData = JSON.parse(localStorage.getItem(i));
+        for(let i =0;i<localStorage.length;i++){
+            let key = localStorage.key(i)
+            console.log(key);
+            const currData = JSON.parse(localStorage.getItem(key));
             initialProductData.push(currData);
          }
          setProductData(initialProductData);
       }, []);
 
-    
+      const deleteProduct=(deleteId)=>{
+        // Remove the product from local storage
+        localStorage.removeItem(deleteId);
+        // Remove the product from the state
+        const updatedData = ProductData.filter((product) => product.productId !== deleteId);
+        setProductData(updatedData);
+   }
+
+
     const changeRef=(name,value)=>{
         if(name==='Id')productIdst=value;
         else if(name==='Price')productPricest =value;
@@ -43,11 +53,8 @@ function DetailInput(props){
         productPrice : productPricest,
         productCategory:productCategoryst
        }
-       size++; 
-
        const strigData = JSON.stringify(data);
-
-       localStorage.setItem(size,strigData);
+       localStorage.setItem(data.productId,strigData);
 
        const newData = [...ProductData,data]
        setProductData(newData);
@@ -56,13 +63,13 @@ function DetailInput(props){
 
 return (<>
 <form onSubmit={handlesubmit}>
-    <InputFild type='text' name="Id" changeRef={changeRef}>Product ID:</InputFild>
-    <InputFild type='number' name="Price" changeRef={changeRef}>Selling Price:</InputFild>
-    <InputFild type='text'  name="Name" changeRef={changeRef}>Product Name:</InputFild>
+    <InputFild  type='text' name="Id" changeRef={changeRef} >Product ID:</InputFild>
+    <InputFild type='number' name="Price" changeRef={changeRef} >Selling Price:</InputFild>
+    <InputFild type='text'  name="Name" changeRef={changeRef} >Product Name:</InputFild>
     <SelectInput name="Category" changeCategory={changeCategory}/>
     <Button type="submit">Add Product</Button>
 </form>
- <ProductList ProductData={ProductData}/>
+ <ProductList ProductData={ProductData} deleteProduct={deleteProduct}/>
 </>)
 }
 
